@@ -176,6 +176,12 @@ class GameState():
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
+        if self.previous_state is None:
+            self.previous_states = frozenset()
+        else:
+            self.previous_states = frozenset(
+                    previous.previous_states |
+                    {(previous.next_player, previous.board.zobrist_hash())})
         self.last_move = move
         
     def apply_move(self, move):
@@ -223,13 +229,8 @@ class GameState():
             return False
         next_board = copy.deepcopy(self.board)
         next_board.place_stone(player, move.point)
-        next_situation = (player.other, next_board)
-        past_state = self.previous_state
-        while past_state is not None:
-            if past_state.situation == next_situation:
-                return True
-            past_state = past_state.previous_state
-        return False
+        next_situation = (player.other, next_board.zobrist_hash())
+        return next_situation in self.previous_states
 
     def is_valid_move(self, move):
         if self.is_over():
