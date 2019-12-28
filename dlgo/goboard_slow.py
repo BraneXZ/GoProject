@@ -64,7 +64,7 @@ class GoString():
     
     @property
     def num_liberties(self):
-        return len(self.lliberties)
+        return len(self.liberties)
     
     def __eq__(self, other):
         return isinstance(other, GoString) and \
@@ -109,7 +109,7 @@ class Board():
         for other_color_string in adjacent_opposite_color: #Reduce liberties of any adjacent strings of the opposite color
             other_color_string.remove_liberty(point)
         for other_color_string in adjacent_opposite_color: #If any opposite color strings now have 0 liberties, remove them
-            if other_color_string.num_liberties = 0:
+            if other_color_string.num_liberties == 0:
                 self._remove_string(other_color_string)
                 
     def is_on_grid(self, point):
@@ -150,7 +150,7 @@ class Board():
             self._grid[point] = None
 
 class GameState():
-    def __init(self, board, next_player, previous, move):
+    def __init__(self, board, next_player, previous, move):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
@@ -194,7 +194,7 @@ class GameState():
     
     @property
     def situation(self):
-        return (self.next_player, self.bboard)
+        return (self.next_player, self.board)
     
     def does_move_violate_ko(self, player, move):
         if not move.is_play:
